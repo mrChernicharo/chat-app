@@ -1,7 +1,16 @@
-export const Layout = () => {
+import { ReactNode } from 'react';
+import Header from '../Header';
+
+interface IProps {
+	children: ReactNode;
+}
+
+export const Layout = ({ children }: IProps) => {
 	return (
 		<div>
-			<h3>Layout</h3>
+			<Header />
+
+			{children}
 		</div>
 	);
 };

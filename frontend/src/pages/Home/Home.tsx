@@ -1,7 +1,12 @@
+import Layout from '../../components/shared/Layout';
+import Room from '../../components/shared/Room';
+
 export const Home = () => {
 	return (
-		<div className="App">
+		<Layout>
 			<h3>Home</h3>
-		</div>
+
+			<Room />
+		</Layout>
 	);
 };

@@ -1,7 +1,9 @@
+import Layout from '../../components/shared/Layout';
+
 export const Login = () => {
 	return (
-		<div className="App">
+		<Layout>
 			<h3>Login</h3>
-		</div>
+		</Layout>
 	);
 };
