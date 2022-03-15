@@ -1,17 +1,7 @@
-// import io from 'socket.io'
+import {app, server } from './io'
 
-import { Socket } from "socket.io"
+app.get('/', (req, res) => {
+	res.send(`<h1>Welcome</h1>`);
+});
 
-const io = require('socket.io')(3333, {
-    cors:{
-        origin: ['http://localhost:3000']
-    }
-})
-
-io.on('connection', (socket: Socket) => {
-    console.log('new user connected. id: ', socket.id ,'at', new Date().toLocaleTimeString())
-
-    socket.on('message', (data) => {
-        console.log(data)
-    })
-})
+server.listen(3333, () => console.log('Listening to port 3333'));
