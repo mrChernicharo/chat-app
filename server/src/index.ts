@@ -1,17 +1,17 @@
-import express from 'express'
-import { createServer } from 'http'
-import { Server } from 'socket.io'
+// import io from 'socket.io'
 
-const app = express()
-const server = createServer(app)
-const io = new Server(server)
+import { Socket } from "socket.io"
 
-app.get('/', (req,res) => {
-    res.send(`<h1>Hey</h1>`)
+const io = require('socket.io')(3333, {
+    cors:{
+        origin: ['http://localhost:3000']
+    }
 })
 
-io.on('connection', socket => {
-    console.log(`A user connected`)
-})
+io.on('connection', (socket: Socket) => {
+    console.log('new user connected. id: ', socket.id ,'at', new Date().toLocaleTimeString())
 
-server.listen(8080, () => console.log('Listening to port 8080'))
+    socket.on('message', (data) => {
+        console.log(data)
+    })
+})
