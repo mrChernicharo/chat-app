@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { FormEvent, ReactNode, useRef, useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { IMessage } from '../../../interfaces/Message';
+import { IMessage } from '../../../interfaces/IMessage';
 
 interface IProps {}
 
@@ -17,11 +17,11 @@ export const Room = ({}: IProps) => {
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
 		const text = inputRef.current?.value.trim();
-		console.log({ text, e });
-
 		if (!text) return;
 
-		const newMessage = { timestamp: new Date(), text };
+		const newMessage = { text, timestamp: new Date() };
+
+		console.log({ text, e, newMessage });
 		setMessages([...messages, newMessage]);
 
 		socket?.emit('message', newMessage);
@@ -37,10 +37,6 @@ export const Room = ({}: IProps) => {
 			newSocket.on('connected', d => {
 				console.log(d);
 			});
-
-			// newSocket.onAny((event, ...args) => {
-			// 	console.log({event, ...args})
-			// })
 		}
 
 		return () => {
