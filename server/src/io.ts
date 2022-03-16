@@ -1,33 +1,41 @@
 import express from 'express';
+import { config } from 'dotenv';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { frontendEvents, serverEvents } from './ioEvent';
+
+config();
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 
 const app = express();
 const server = createServer(app);
-
 const io = new Server(server, {
-	transports: ['polling'],
+	// transports: ['polling'],
 	cors: {
 		// @ts-ignore
 		cors: {
-			origin: [`http://localhost:3000`],
+			origin: [CLIENT_URL],
 		},
 	},
 });
 
-io.on('connection', socket => {
+io.on(serverEvents.CONNECTION, (socket: Socket) => {
 	console.log('a user connected ', socket.id);
 
-	socket.emit('connected', { serverMessage: socket.id + ' has connected' });
-
-	socket.on('message', data => {
-		console.log(socket.id, ' sent message ', data);
+	io.emit('connected', {
+		serverMessage: socket.id + ' has connected',
 	});
 
-	socket.on('disconnect', () => {
+	socket.on(frontendEvents.FRONTEND_SEND_MESSAGE, (data: any) => {
+		console.log(socket.id, ' sent message ', data);
+
+		// socket.broadcast.emit(serverEvents.SERVER_BROADCAST_MESSAGE, data); // send to all but me
+		io.emit(serverEvents.SERVER_BROADCAST_MESSAGE, data); // send to all
+	});
+
+	socket.on(serverEvents.DISCONNECT, () => {
 		console.log(`socket ${socket.id} disconnected`);
 	});
 });
 
-
-export { app, io, server }
+export { app, io, server };

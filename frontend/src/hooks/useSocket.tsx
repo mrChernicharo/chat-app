@@ -12,15 +12,6 @@ export const useSocket = () => {
 	const [socket, setSocket] = useState<Socket | null>(null);
 	const [messages, setMessages] = useState<IMessage[]>([]);
 
-	// const emit = (name: string, ...args: any) => {
-	// 	socket?.emit(name, args);
-	// };
-
-	// const on = (name: string, ...args: any) => {
-	// 	socket?.on(name, args);
-	// 	console.log(this);
-	// };
-
 	const addMessage = (message: IMessage) => {
 		console.log('add message');
 		socket?.emit(frontendEvents.FRONTEND_SEND_MESSAGE, message);
@@ -43,7 +34,7 @@ export const useSocket = () => {
 
 		setSocket(newSocket);
 
-		newSocket?.on(serverEvents.SERVER_BROADCAST_MESSAGE, data => {
+		newSocket.on(serverEvents.SERVER_BROADCAST_MESSAGE, data => {
 			console.log('server sent this data: ', data);
 			const newMessage = {
 				...data,
@@ -58,8 +49,6 @@ export const useSocket = () => {
 	}, [setSocket]);
 
 	return {
-		// emit,
-		// on,
 		socket,
 		messages,
 		socketID: id,
