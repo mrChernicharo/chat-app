@@ -3,15 +3,14 @@ import { FormEvent, ReactNode, useRef, useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useSocket } from '../../../hooks/useSocket';
 import { IMessage } from '../../../interfaces/IMessage';
+import { frontendEvents } from '../../../io.events';
 
 interface IProps {}
 
 // const URL = `http://${window.location.hostname}:3333`;
 
 export const Room = ({}: IProps) => {
-	const { socketID, emit } = useSocket();
-
-	const [messages, setMessages] = useState<IMessage[]>([]);
+	const { socketID, messages, addMessage } = useSocket();
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -30,16 +29,14 @@ export const Room = ({}: IProps) => {
 		const newMessage = { text, timestamp: new Date() };
 
 		console.log({ text, e, newMessage });
-		setMessages([...messages, newMessage]);
-
-		emit('message', newMessage);
+		addMessage(newMessage);
 	};
 
 	return (
 		<div>
 			<h3>Room</h3>
 			<div style={connectionIndicator}></div>
-			{socketID && <p>socketID: {socketID}</p>}
+			{!!socketID && <p>socketID: {socketID}</p>}
 			<ul>
 				{messages.map(msg => (
 					<li key={nanoid()}>

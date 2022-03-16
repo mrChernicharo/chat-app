@@ -1,33 +1,32 @@
 import { Socket } from 'socket.io-client';
+import { IMessage } from '../interfaces/IMessage';
 import { IUser } from '../interfaces/IUser';
 
 export interface IGlobalState {
 	user: IUser | null;
-	updateUser: (user: IUser) => void;
-	emit: (name: string, ...args: any) => void;
-	on: (name: string, ...args: any) => void;
+	messages: IMessage[];
 	socket: Socket | null;
 	socketID: string;
+	updateUser: (user: IUser) => void;
+	addMessage: (message: IMessage) => void;
 }
 
 const useGlobal: IGlobalState = {
 	user: null,
-	updateUser(user) {
-		this.user = user;
-	},
-	emit(name: string, ...args: any) {},
-	on(name: string, ...args: any) {},
+	messages: [],
 	socket: null,
 	socketID: '',
+	updateUser(user) {},
+	addMessage(message: IMessage) {},
 };
 
 const setGlobalState = (globalData: IGlobalState) => {
 	useGlobal.user = globalData.user;
-	useGlobal.updateUser = globalData.updateUser;
-	useGlobal.emit = globalData.emit;
-	useGlobal.on = globalData.on;
 	useGlobal.socket = globalData.socket;
 	useGlobal.socketID = globalData.socketID;
+	useGlobal.messages = globalData.messages;
+	useGlobal.updateUser = globalData.updateUser;
+	useGlobal.addMessage = globalData.addMessage;
 };
 
 export { useGlobal, setGlobalState };
